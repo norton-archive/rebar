@@ -43,6 +43,10 @@
 %%
 %%  module_ext: characters to append to the parser's module name
 %%              "" by default
+%%
+%%  prefix: atom to use as a prefix for the decoder functions inside
+%%          the parser's module
+%%          '' by default
 -module(rebar_abnfc_compiler).
 
 -export([compile/2]).
@@ -91,7 +95,8 @@ option(Opt, DtlOpts) ->
 default(doc_root) -> "src";
 default(out_dir)  -> "src";
 default(source_ext) -> ".abnf";
-default(module_ext) -> "".
+default(module_ext) -> "";
+default(prefix) -> ''.
 
 abnfc_is_present() ->
     code:which(abnfc) =/= non_existing.
@@ -112,7 +117,8 @@ compile_abnfc(Source, _Target, Config) ->
             Opts = [noobj,
                     {o, option(out_dir, AbnfcOpts)},
                     {mod, filename:basename(Source, SourceExt) ++
-                         option(module_ext, AbnfcOpts)}],
+                         option(module_ext, AbnfcOpts)},
+                    {prefix, option(prefix, AbnfcOpts)}],
             case abnfc:file(Source, Opts) of
                 ok -> ok;
                 Error ->
