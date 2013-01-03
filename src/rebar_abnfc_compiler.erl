@@ -44,6 +44,9 @@
 %%  module_ext: characters to append to the parser's module name
 %%              "" by default
 %%
+%%  parser: module to use for parsing the ABNF grammars
+%%          'abnfc_rfc4234' by default
+%%
 %%  prefix: atom to use as a prefix for the decoder functions inside
 %%          the parser's module
 %%          '' by default
@@ -96,6 +99,7 @@ default(doc_root) -> "src";
 default(out_dir)  -> "src";
 default(source_ext) -> ".abnf";
 default(module_ext) -> "";
+default(parser) -> 'abnfc_rfc4234';
 default(prefix) -> ''.
 
 abnfc_is_present() ->
@@ -118,6 +122,7 @@ compile_abnfc(Source, _Target, Config) ->
                     {o, option(out_dir, AbnfcOpts)},
                     {mod, filename:basename(Source, SourceExt) ++
                          option(module_ext, AbnfcOpts)},
+                    {parser, option(parser, AbnfcOpts)},
                     {prefix, option(prefix, AbnfcOpts)}],
             case abnfc:file(Source, Opts) of
                 ok -> ok;
